@@ -1,4 +1,6 @@
-const API_URL = 'http://34.100.159.24/api';
+// const API_URL = 'http://34.100.159.24/api';
+
+const API_URL = axios.create({ baseURL: 'https://34.100.159.24/api' });
     
 // User authentication services
 export const register = async (name, email, password) => {
