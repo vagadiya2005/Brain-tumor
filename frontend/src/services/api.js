@@ -1,4 +1,4 @@
-const API_URL = 'http://34.100.159.24/api';
+const API_URL = 'https://api.btd.reaai.me/api';
 
 // User authentication services
 export const register = async (name, email, password) => {
