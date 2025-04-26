@@ -1,0 +1,64 @@
+# Use a slim official Python base image
+FROM python:3.10-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Set work directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgl1-mesa-glx \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install Python dependencies
+COPY requirements.fast.txt .
+RUN pip install --upgrade pip && pip install -r requirements.fast.txt
+
+# Copy the app code
+COPY ml_service.py .
+COPY models/ /app/models/
+
+# Copy the model (optional: if not mounting it)
+# COPY models/ models/
+
+# Expose FastAPI's default port
+EXPOSE 8001
+
+# Run the app using uvicorn
+CMD ["uvicorn", "ml_service:app", "--host", "0.0.0.0", "--port", "8001"]
+
+
+
+
+# multi stage build
+
+# FROM python:3.10-slim-buster
+
+# ENV PYTHONDONTWRITEBYTECODE=1
+# ENV PYTHONUNBUFFERED=1
+
+# WORKDIR /app
+
+# RUN apt-get update && apt-get install -y \
+#     libglib2.0-0 libsm6 libxext6 libxrender-dev \
+#     && rm -rf /var/lib/apt/lists/*
+
+# COPY requirements.txt .
+
+# # Use CPU-only TensorFlow + clean install
+# RUN pip install --no-cache-dir --upgrade pip && \
+#     pip install --no-cache-dir -r requirements.txt
+
+# COPY . .
+
+# EXPOSE 8000
+
+# CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

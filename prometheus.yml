@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: 'flask-app'
+    static_configs:
+      - targets: ['flask-app:5000']
+
+  - job_name: 'fastapi-tumor-monitor'
+    static_configs:
+      - targets: ['fast-app:8001']  # Use service name or IP:port
